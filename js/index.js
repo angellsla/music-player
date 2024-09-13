@@ -6,7 +6,7 @@ var currentIndex = 0;
 // 1. 加载音乐列表信息
 $.ajax({
   type: "GET",
-  url: "../music.json",
+  url: "./../music.json",
   dataType: "json",
   success: function (data) {
     musicList = data;
