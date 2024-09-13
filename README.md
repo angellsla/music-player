@@ -1,2 +1,2 @@
 # music-player
-闲的没事写的（
+一个 H5+CSS+JS 写的音乐播放器
