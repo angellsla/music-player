@@ -2,18 +2,30 @@
 var musicList = [];
 // 声明变量，保存当前播放的是哪一首歌曲
 var currentIndex = 0;
+// 实现列表切换功能所用的列表信息
+var musicLists = [
+  { name: '默认', url: 'https://raw.githubusercontent.com/angellsla/music-player/main/music.json' },
+  { name: '《遮羞艾莉》', url: 'https://raw.githubusercontent.com/angellsla/music-player/main/zxal.json' },
+  { name: 'liet2', url: 'https://raw.githubusercontent.com/angellsla/music-player/main/list2.json' },
+];
 
-// 1. 加载音乐列表信息
-$.ajax({
-  type: "GET",
-  url: "https://raw.githubusercontent.com/angellsla/music-player/main/music.json",
-  dataType: "json",
-  success: function (data) {
-    musicList = data;
-    render(musicList[currentIndex]);
-    renderMusicList(musicList);
-  },
-});
+
+// 加载音乐列表信息
+function loadMusicList(url) {
+  $.ajax({
+    type: "GET",
+    url: url,
+    dataType: "json",
+    success: function(data) {
+      musicList = data;
+      render(musicList[currentIndex]);
+      renderMusicList(musicList);
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+      console.log("Error loading the music list: " + textStatus + ", " + errorThrown);
+    }
+  });
+}
 
 // 给播放按钮绑定点击事件
 $("#playBtn").on("click", function () {
@@ -24,7 +36,7 @@ $("#playBtn").on("click", function () {
     // 让音乐信息卡片显示出来
     $(".player-info").animate(
       {
-        top: "-100%",
+        top: "-120%",
         opacity: 1,
       },
       "slow"
@@ -179,3 +191,25 @@ function renderMusicList(list) {
     $(".music-list").append($li);
   });
 }
+
+// 填充 select 元素
+function populateMusicSelect() {
+  var select = $('#musicSelect');
+  select.empty(); // 清空现有选项
+  $.each(musicLists, function(index, list) {
+    select.append($('<option></option>').val(list.url).html(list.name));
+  });
+  select.val(musicLists[0].url); // 默认选择第一个列表
+}
+
+// 给 select 元素绑定 change 事件
+$('#musicSelect').on('change', function() {
+  var selectedUrl = $(this).val();
+  loadMusicList(selectedUrl);
+});
+
+// 页面加载完成后，填充 select 元素
+$(document).ready(function() {
+  populateMusicSelect();
+  loadMusicList(musicLists[0].url); // 默认加载第一个列表
+});
