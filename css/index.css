@@ -232,6 +232,52 @@ body {
   color: aquamarine;
 }
 
+.volume {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.volume-controls {
+  display: flex;
+  align-items: center; 
+}
+
+.volume-controls .volume {
+  margin-right: 10px; 
+}
+
+.fa-volume-up {
+  font-size: 1.2em; 
+}
+
+[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  margin: 0;
+  outline: 0;
+  background-color: transparent;
+  width: 166.67px; 
+}
+[type="range"]::-webkit-slider-runnable-track {
+  height: 4px; 
+  background: #f1b6b6; /* 滑块轨道的背景色 */
+}
+[type="range" i]::-webkit-slider-container {
+  height: 20px; /* 滑块容器的高度，用于确保滑块手柄不会超出边界 */
+  overflow: hidden;
+}
+[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 10px; 
+  height: 10px; 
+  border-radius: 50%; /* 滑块手柄的圆形外观 */
+  background-color: #f44336; /* 滑块手柄的背景色 */
+  border: 1px solid transparent; 
+  margin-top: -3px; /* 调整滑块手柄的位置，使其垂直居中 */
+  border-image: linear-gradient(#f44336,#f44336) 0 fill / 8 20 8 0 / 0px 0px 0 2000px;
+}
+
 @keyframes zhuan {
   0% {
     transform: rotate(0deg);

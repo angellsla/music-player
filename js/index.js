@@ -213,3 +213,12 @@ $(document).ready(function() {
   populateMusicSelect();
   loadMusicList(musicLists[0].url); // 默认加载第一个列表
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+  var audioPlayer = document.getElementById('audio');
+  var volumeControl = document.getElementById('volumeControl');
+  audioPlayer.volume = volumeControl.value;  // 设置初始音量
+  volumeControl.addEventListener('input', function() {
+      audioPlayer.volume = this.value;
+  });  // 监听滑条变化事件
+});

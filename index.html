@@ -61,6 +61,11 @@
           <select id="musicSelect">
             <!-- 动态填充列表信息 -->
           </select>
+            <!-- audio音量控制 -->
+          <div class="volume-controls">
+            <span class="fa fa-volume-up volume"></span>
+            <input type="range" id="volumeControl" min="0" max="1" step="0.01" value="0.3">
+         </div>
         </div>
 
         <div class="modal-wrapper">
@@ -74,7 +79,7 @@
       </div>
     </div>
 
-    <audio src=""></audio>
+    <audio id="audio" src=""></audio>
 
     <script src="./js/jquery.js"></script>
     <script src="./js/index.js"></script>
