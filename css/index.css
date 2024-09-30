@@ -175,7 +175,7 @@ body {
   width: 30%;
   height: 100%;
   padding: 20px;
-  background-color: #fff;
+  background-color: #f1e3e1;
   position: absolute;
   top: 0;
   right: 0;
@@ -229,7 +229,7 @@ body {
 }
 
 .playing {
-  color: aquamarine;
+  color: rgb(167, 212, 233);
 }
 
 .volume {
@@ -248,6 +248,7 @@ body {
 
 .fa-volume-up {
   font-size: 1.2em; 
+  color: #6b6868;
 }
 
 [type="range"] {
@@ -260,7 +261,7 @@ body {
 }
 [type="range"]::-webkit-slider-runnable-track {
   height: 4px; 
-  background: #f1b6b6; /* 滑块轨道的背景色 */
+  background: #f3dcdc; /* 滑块轨道的背景色 */
 }
 [type="range" i]::-webkit-slider-container {
   height: 20px; /* 滑块容器的高度，用于确保滑块手柄不会超出边界 */
@@ -272,7 +273,7 @@ body {
   width: 10px; 
   height: 10px; 
   border-radius: 50%; /* 滑块手柄的圆形外观 */
-  background-color: #f44336; /* 滑块手柄的背景色 */
+  background-color: #ceaeac; /* 滑块手柄的背景色 */
   border: 1px solid transparent; 
   margin-top: -3px; /* 调整滑块手柄的位置，使其垂直居中 */
   border-image: linear-gradient(#f44336,#f44336) 0 fill / 8 20 8 0 / 0px 0px 0 2000px;
