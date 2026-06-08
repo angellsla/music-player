@@ -83,6 +83,10 @@ body {
   color: #fff;
 }
 
+.control i.active {
+  color: #f2709b;
+}
+
 .player-warp .player-info {
   width: 90%;
   min-height: 130px;
