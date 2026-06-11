@@ -67,11 +67,17 @@
         <!-- 控制区域 -->
         <div class="modal-controls">
           <!-- 播放列表选择 -->
-          <div class="playlist-select-wrap">
-            <i class="fa fa-list-ul select-icon"></i>
-            <select id="musicSelect" class="playlist-select">
-              <!-- 动态填充列表信息 -->
-            </select>
+          <div class="playlist-select-wrap" id="playlistSelectWrap">
+            <div class="custom-select" id="customSelect">
+              <div class="custom-select-trigger" id="selectTrigger">
+                <i class="fa fa-list-ul select-icon"></i>
+                <span class="select-value" id="selectValue">默认</span>
+                <i class="fa fa-chevron-down select-arrow" id="selectArrow"></i>
+              </div>
+              <div class="custom-options" id="customOptions">
+                <!-- 动态填充选项 -->
+              </div>
+            </div>
           </div>
 
           <!-- 音量控制 -->

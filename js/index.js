@@ -494,22 +494,69 @@ function renderMusicList(list) {
   }
 }
 
-// 填充 select 元素
+// 填充自定义下拉选项
 function populateMusicSelect() {
-  var select = $('#musicSelect');
-  select.empty(); // 清空现有选项
+  var optionsContainer = $('#customOptions');
+  optionsContainer.empty();
+
   $.each(musicLists, function(index, list) {
-    select.append($('<option></option>').val(list.url).html(list.name));
+    var option = $(`
+      <div class="custom-option ${index === 0 ? 'selected' : ''}" data-value="${list.url}" data-name="${list.name}">
+        <i class="fa fa-music" style="font-size: 12px; opacity: 0.5;"></i>
+        <span>${list.name}</span>
+      </div>
+    `);
+    optionsContainer.append(option);
   });
-  select.val(musicLists[0].url); // 默认选择第一个列表
+
+  // 设置默认显示值
+  $('#selectValue').text(musicLists[0].name);
 }
 
-// 给 select 元素绑定 change 事件
-$('#musicSelect').on('change', function() {
-  var selectedUrl = $(this).val();
+// 自定义下拉组件交互
+var selectOpen = false;
+
+function toggleSelect() {
+  selectOpen = !selectOpen;
+  $('#customSelect').toggleClass('open', selectOpen);
+}
+
+function closeSelect() {
+  selectOpen = false;
+  $('#customSelect').removeClass('open');
+}
+
+// 点击触发器打开/关闭下拉
+$(document).on('click', '#selectTrigger', function(e) {
+  e.stopPropagation();
+  toggleSelect();
+});
+
+// 点击选项选择
+$(document).on('click', '.custom-option', function(e) {
+  e.stopPropagation();
+  var url = $(this).data('value');
+  var name = $(this).data('name');
+
+  // 更新选中状态
+  $('.custom-option').removeClass('selected');
+  $(this).addClass('selected');
+
+  // 更新显示值
+  $('#selectValue').text(name);
+
+  // 关闭下拉
+  closeSelect();
+
+  // 加载对应播放列表
   currentIndex = 0;
   playedIndices = [];
-  loadMusicList(selectedUrl);
+  loadMusicList(url);
+});
+
+// 点击页面其他地方关闭下拉
+$(document).on('click', function() {
+  closeSelect();
 });
 
 // 页面加载完成后，初始化
