@@ -47,35 +47,54 @@
 
     <div class="mask_bg"></div>
 
-    <!-- 模态框 -->
-    <div class="modal">
+    <!-- 模态框 - 音乐列表 -->
+    <div class="modal" id="playlistModal">
+      <div class="modal-backdrop"></div>
       <div class="modal-box">
-        <div class="modal-box-top">
-          <div class="modal-title">音乐列表</div>
-          <div class="modal-close">
-            <i class="fa fa-remove"></i>
+        <!-- 顶部标题栏 -->
+        <div class="modal-header">
+          <div class="modal-header-content">
+            <div class="modal-title">
+              <i class="fa fa-music modal-title-icon"></i>
+              <span>音乐列表</span>
+            </div>
+            <div class="modal-close" id="modalCloseBtn">
+              <i class="fa fa-times"></i>
+            </div>
           </div>
         </div>
-        
-        <div class="list-select">
-          <label for="musicSelect">当前列表 </label>
-          <select id="musicSelect">
-            <!-- 动态填充列表信息 -->
-          </select>
-            <!-- audio音量控制 -->
+
+        <!-- 控制区域 -->
+        <div class="modal-controls">
+          <!-- 播放列表选择 -->
+          <div class="playlist-select-wrap">
+            <i class="fa fa-list-ul select-icon"></i>
+            <select id="musicSelect" class="playlist-select">
+              <!-- 动态填充列表信息 -->
+            </select>
+          </div>
+
+          <!-- 音量控制 -->
           <div class="volume-controls">
-            <span class="fa fa-volume-up volume"></span>
-            <input type="range" id="volumeControl" min="0" max="1" step="0.01" value="0.3">
-         </div>
+            <div class="volume-wrap">
+              <i class="fa fa-volume-down volume-icon"></i>
+              <input type="range" id="volumeControl" class="volume-slider" min="0" max="1" step="0.01" value="0.3">
+              <i class="fa fa-volume-up volume-icon"></i>
+            </div>
+          </div>
         </div>
 
+        <!-- 歌曲统计信息 -->
+        <div class="playlist-stats">
+          <span class="stats-count"><i class="fa fa-music"></i> <span id="totalCount">0</span> 首歌曲</span>
+          <span class="stats-playing"><i class="fa fa-volume-up"></i> <span id="currentSongName">未播放</span></span>
+        </div>
+
+        <!-- 列表滚动区域 -->
         <div class="modal-wrapper">
-          <ul class="music-list">
-            <!-- <li>
-              <span>01. CHE.R.RY - 上坂堇</span>
-              <span class="fa fa-play-circle play-circle"></span>
-            </li> -->
-          </ul>
+          <div class="music-list" id="musicList">
+            <!-- 动态填充歌曲项 -->
+          </div>
         </div>
       </div>
     </div>

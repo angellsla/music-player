@@ -339,17 +339,19 @@ $("#modeBtn").on("click", function () {
   togglePlayMode();
 });
 
-// 给音乐列表绑定点击事件
+// 打开模态框
 $("#openModal").on("click", function () {
-  $(".modal").css({
-    display: "block",
-  });
+  $(".modal").addClass("show");
 });
 
-$(".modal-close").on("click", function () {
-  $(".modal").css({
-    display: "none",
-  });
+// 关闭模态框 - 关闭按钮
+$(document).on("click", ".modal-close, #modalCloseBtn", function () {
+  $(".modal").removeClass("show");
+});
+
+// 关闭模态框 - 点击背景
+$(document).on("click", ".modal-backdrop", function () {
+  $(".modal").removeClass("show");
 });
 
 // 监听audio标签的 timeupdate 事件
@@ -385,7 +387,8 @@ $("audio").on("ended", function () {
 });
 
 // 通过事件委托给音乐列表的播放按钮绑定点击事件
-$(".music-list").on("click", ".play-circle", function () {
+$(".music-list").on("click", ".play-btn", function (e) {
+  e.stopPropagation();
   if ($(this).hasClass("fa-play-circle")) {
     var index = $(this).attr("data-index");
     currentIndex = parseInt(index);
@@ -398,6 +401,33 @@ $(".music-list").on("click", ".play-circle", function () {
     addToPlayHistory(currentIndex);
     $("#playBtn").trigger("click");
   } else {
+    $("#playBtn").trigger("click");
+  }
+});
+
+// 点击歌曲卡片也能播放
+$(".music-list").on("click", ".song-item", function () {
+  var index = $(this).attr("data-index");
+  var isCurrentPlaying = $(this).hasClass("playing") && !$("audio").get(0).paused;
+  
+  if (!isCurrentPlaying) {
+    currentIndex = parseInt(index);
+    
+    if (playMode === 'shuffle' && !playedIndices.includes(currentIndex)) {
+      playedIndices.push(currentIndex);
+    }
+    
+    render(musicList[currentIndex]);
+    addToPlayHistory(currentIndex);
+    // 如果当前是暂停状态，则开始播放
+    if ($("audio").get(0).paused) {
+      $("#playBtn").trigger("click");
+    } else {
+      // 正在播放其他歌曲，则重新渲染列表
+      renderMusicList(musicList);
+    }
+  } else {
+    // 当前正在播放这首，则暂停
     $("#playBtn").trigger("click");
   }
 });
@@ -423,25 +453,45 @@ function render(data) {
   $(".mask_bg").css({
     background: `url("${data.cover}") no-repeat center center`,
   });
+  // 更新状态栏当前歌曲名称
+  $("#currentSongName").text(data.name);
 }
 
-// 根据音乐列表数据，创建li
+// 根据音乐列表数据，创建歌曲卡片
 function renderMusicList(list) {
   $(".music-list").empty();
 
   $.each(list, function (index, item) {
-    var $li = $(`
-      <li class="${index == currentIndex ? "playing" : ""}">
-        <span>0${index + 1}. ${item.name} - ${item.singer}</span>
-        <span data-index="${index}" class="fa ${
-      index == currentIndex && !$("audio").get(0).paused
-        ? "fa-pause-circle"
-        : "fa-play-circle"
-    } play-circle"></span>
-      </li>
+    var isPlaying = (index == currentIndex) && !$("audio").get(0).paused;
+    var playIcon = isPlaying ? "fa-pause-circle" : "fa-play-circle";
+    var itemClass = (index == currentIndex) ? "song-item playing" : "song-item";
+
+    var $songItem = $(`
+      <div class="${itemClass}" data-index="${index}">
+        <div class="song-index">0${index + 1}</div>
+        <div class="playing-indicator">
+          <div class="playing-bar"></div>
+          <div class="playing-bar"></div>
+          <div class="playing-bar"></div>
+        </div>
+        <div class="song-info">
+          <span class="song-name">${item.name}</span>
+          <span class="song-artist">${item.singer}</span>
+        </div>
+        <span class="song-duration">${item.time || '--:--'}</span>
+        <span data-index="${index}" class="fa ${playIcon} play-btn"></span>
+      </div>
     `);
-    $(".music-list").append($li);
+    $(".music-list").append($songItem);
   });
+
+  // 更新统计信息
+  if (list && list.length > 0) {
+    $("#totalCount").text(list.length);
+    if (musicList[currentIndex]) {
+      $("#currentSongName").text(musicList[currentIndex].name);
+    }
+  }
 }
 
 // 填充 select 元素
