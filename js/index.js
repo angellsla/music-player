@@ -354,8 +354,12 @@ $(document).on("click", ".modal-backdrop", function () {
   $(".modal").removeClass("show");
 });
 
+// 正在拖拽进度条的标志位
+var isSeeking = false;
+
 // 监听audio标签的 timeupdate 事件
 $("audio").on("timeupdate", function () {
+  if (isSeeking) return;
   // 获取音乐当前到的时间，单位：秒
   var currentTime = $("audio").get(0).currentTime || 0;
   // 获取音乐的总时长，单位：秒
@@ -364,9 +368,43 @@ $("audio").on("timeupdate", function () {
   $(".current-time").text(formatTime(currentTime));
   // 设置进度条
   var value = (currentTime / duration) * 100;
-  $(".music_progress_line").css({
-    width: value + "%",
-  });
+  $("#progressSlider").val(value);
+  // 更新CSS变量，用于显示进度条渐变背景
+  $("#progressSlider").css('--progress', value + '%');
+});
+
+// 监听进度条开始拖拽
+$("#progressSlider").on("mousedown touchstart", function () {
+  isSeeking = true;
+});
+
+// 监听进度条拖动过程（实时更新时间显示）
+$("#progressSlider").on("input", function () {
+  var value = parseFloat($(this).val()) || 0;
+  var duration = $("audio").get(0).duration || 0;
+  var newTime = (value / 100) * duration;
+  $(".current-time").text(formatTime(newTime));
+  $("#progressSlider").css('--progress', value + '%');
+});
+
+// 监听进度条松开，调整到新播放位置
+$("#progressSlider").on("mouseup touchend change", function () {
+  var value = parseFloat($(this).val()) || 0;
+  var duration = $("audio").get(0).duration || 0;
+  var newTime = (value / 100) * duration;
+  $("audio").get(0).currentTime = newTime;
+  isSeeking = false;
+});
+
+// 拖动过程中如果鼠标离开进度条区域也能正常处理
+$(document).on("mouseup touchend", function () {
+  if (isSeeking) {
+    var value = parseFloat($("#progressSlider").val()) || 0;
+    var duration = $("audio").get(0).duration || 0;
+    var newTime = (value / 100) * duration;
+    $("audio").get(0).currentTime = newTime;
+    isSeeking = false;
+  }
 });
 
 // 监听音乐播放完毕的事件 - 自动播放下一首
@@ -453,6 +491,10 @@ function render(data) {
   $(".mask_bg").css({
     background: `url("${data.cover}") no-repeat center center`,
   });
+  // 重置进度条
+  $("#progressSlider").val(0);
+  $("#progressSlider").css('--progress', '0%');
+  $(".current-time").text("00:00");
   // 更新状态栏当前歌曲名称
   $("#currentSongName").text(data.name);
 }
